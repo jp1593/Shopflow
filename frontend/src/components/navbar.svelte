@@ -20,19 +20,12 @@
       <li><a href="#contact">Contact</a></li>
     </ul>
 
-    <!-- Mobile Hamburger Menu -->
-    <!-- <div class="menu-icon" class:open={isOpen} on:click={toggleMenu}>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div> -->
-
     <!-- Mobile Menu -->
-    <div class="menu {isOpen ? 'open' : ''}">
-      <a href="#home" on:click={toggleMenu}>Home</a>
-      <a href="#about" on:click={toggleMenu}>About</a>
-      <a href="#services" on:click={toggleMenu}>Services</a>
-      <a href="#contact" on:click={toggleMenu}>Contact</a>
+    <div class="menu">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
     </div>
   </div>
 </nav>
@@ -105,21 +98,6 @@
     background-color: #f4a261;
   }
 
-  .menu-icon {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 4px;
-  }
-
-  .menu-icon div {
-    width: 30px;
-    height: 4px;
-    background-color: #fff;
-    border-radius: 4px;
-    transition: transform 0.3s ease-in-out;
-  }
-
   .menu {
     display: none;
     flex-direction: column;
@@ -133,29 +111,9 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
 
-  .menu.open {
-    display: flex;
-  }
-/* 
-  .menu-icon.open div:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-  }
-
-  .menu-icon.open div:nth-child(2) {
-    opacity: 0;
-  }
-
-  .menu-icon.open div:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
-  }
-
   @media (max-width: 768px) {
     .nav-links {
       display: none;
     }
-
-    .menu-icon {
-      display: flex;
-    }
-  } */
+  }
 </style>
