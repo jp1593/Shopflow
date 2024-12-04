@@ -136,7 +136,7 @@
   .menu.open {
     display: flex;
   }
-
+/* 
   .menu-icon.open div:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
   }
@@ -157,5 +157,5 @@
     .menu-icon {
       display: flex;
     }
-  }
+  } */
 </style>

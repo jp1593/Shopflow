@@ -10,7 +10,7 @@
     const timer = setTimeout(() => {
       showHomeScreen = false;
       showLandingPage = true;
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   });
