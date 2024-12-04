@@ -19,7 +19,7 @@
 {#if showHomeScreen}
   <div class="preview" transition:fade></div>
 {:else if showLandingPage}
-  <div class="home">
+  <div>
     <LandingPage />
   </div>
 {/if}
@@ -37,16 +37,5 @@
     background-image: url("../assets/ShopFlow.jpeg");
     background-size: cover;
     background-position: center;
-  }
-
-  .home {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
   }
 </style>
