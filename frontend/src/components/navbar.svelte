@@ -12,7 +12,6 @@
       <div class="logo-text">ShopFlow</div>
     </div>
 
-    <!-- Navbar Links -->
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
@@ -20,7 +19,6 @@
       <li><a href="#contact">Contact</a></li>
     </ul>
 
-    <!-- Mobile Menu -->
     <div class="menu">
       <a href="#home">Home</a>
       <a href="#about">About</a>
