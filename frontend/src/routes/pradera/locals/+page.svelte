@@ -145,7 +145,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    justify-content: center;
+    justify-content: center; 
     text-align: left; /* Align labels text to the left */
   }
 
@@ -169,4 +169,4 @@
       grid-template-columns: 1fr;
     }
   }
-</style>
+</style> 
