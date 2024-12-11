@@ -8,31 +8,31 @@
     },
     {
       label: "Xela",
-      route: "/xela",
+      // route: "/xela",
     },
     {
       label: "Chiquimula",
-      route: "/chiquimula",
+      // route: "/chiquimula",
     },
     {
       label: "Escuintla",
-      route: "/escuintla",
+      // route: "/escuintla",
     },
     {
       label: "Huehuetenango",
-      route: "/huehuetenango",
+      // route: "/huehuetenango",
     },
     {
       label: "Puerto Barrios",
-      route: "/puerto-barrios",
+      // route: "/puerto-barrios",
     },
     {
       label: "Zacapa",
-      route: "/zacapa",
+      // route: "/zacapa",
     },
     {
       label: "Chiquimula",
-      route: "/chiquimula",
+      // route: "/chiquimula",
     },
   ];
 </script>
