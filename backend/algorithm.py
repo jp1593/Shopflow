@@ -1,9 +1,11 @@
 from flask import Flask, jsonify
+from flask_cors import CORS 
 import cv2
 import numpy as np
 import threading
 
 app = Flask(__name__)
+CORS(app)  
 
 # Load the model
 net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'mobilenet_iter_73000.caffemodel')
