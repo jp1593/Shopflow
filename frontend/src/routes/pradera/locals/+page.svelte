@@ -1,17 +1,10 @@
 <script>
   import Navbar from "../../../components/navbar.svelte";
-
-  let questions = [
-    { id: 1, text: `Entretenimiento` },
-    { id: 2, text: `Belleza` },
-    {
-      id: 3,
-      text: `Alimentación`,
-    },
-  ];
+  import Albacinema from "../../../assets/Albacinema_Logo.png";
+  import Max from "../../../assets/NeIpPcwC_400x400.jpg";
+  import Burger from "../../../assets/Burger_King_2020.svg.png";
 
   let selected = $state();
-
   let answer = $state("");
 
   function handleSubmit(event) {
@@ -23,42 +16,50 @@
 
   const items = [
     {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
+      image: Albacinema,
+      name: "Albacinema",
+      cantidad: 0,
+      estado: "Vacío",
     },
     {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
+      image: Max,
+      name: "Max",
+      cantidad: 0,
+      estado: "Moderado",
     },
     {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      labels: ["Tienda X", "Cantidad de personas: 0", "Estado: Vacío"],
+      image: Burger,
+      name: "Burger King",
+      cantidad: 0,
+      estado: "Saturado",
     },
   ];
+
+  let search = $state("");
+  let estadoFilter = $state("Todos");
+
+  // 🔹 Derived filtered items
+  const filteredItems = $derived(
+    items.filter((item) => {
+      const name = item.name.toLowerCase();
+      const estado = item.estado.toLowerCase();
+
+      const matchesName = name.includes(search.toLowerCase());
+      const matchesEstado =
+        estadoFilter === "Todos" ||
+        estado.includes(estadoFilter.toLowerCase());
+
+      return matchesName && matchesEstado;
+    })
+  );
+
+  // 🔹 Helper: return estado color
+  function estadoColor(estado) {
+    if (estado.toLowerCase().includes("vacío")) return "green";
+    if (estado.toLowerCase().includes("moderado")) return "orange";
+    if (estado.toLowerCase().includes("saturado")) return "red";
+    return "black";
+  }
 </script>
 
 <div class="header">
@@ -67,56 +68,54 @@
   </a>
 </div>
 
-<div class="filter">
-  <form onsubmit={handleSubmit}>
-    <select class="" {selected} onchange={() => (answer = "")}>
-      {#each questions as question}
-        <option value={question}>
-          {question.text}
-        </option>
-      {/each}
-    </select>
-
-    <button disabled={!answer} type="submit"> Submit </button>
-  </form>
+<!-- 🔹 Search and Estado filter UI -->
+<div class="search-filter">
+  <input type="text" placeholder="Buscar local..." bind:value={search} />
+  <select bind:value={estadoFilter}>
+    <option value="Todos">Todos</option>
+    <option value="Vacío">Vacío</option>
+    <option value="Moderado">Moderado</option>
+    <option value="Saturado">Saturado</option>
+  </select>
 </div>
 
 <div class="grid">
-  {#each items as item}
+  {#each filteredItems as item}
     <div class="grid-item">
-      <img src={item.image} alt="local" />
+      <img src={item.image} alt={item.name} />
       <div class="labels">
-        {#each item.labels as label}
-          <div class="label">{label}</div>
-        {/each}
+        <div class="label name">{item.name}</div>
+        <div class="label grey">
+          Cantidad de personas: {item.cantidad}
+        </div>
+        <div class="label estado" style="color: {estadoColor(item.estado)}">
+          Estado: {item.estado}
+        </div>
       </div>
     </div>
   {/each}
 </div>
 
 <style>
-  .filter {
+  .search-filter {
     display: flex;
     justify-content: center;
-    justify-items: center;
-    margin-bottom: 50px;
+    gap: 15px;
+    margin: 20px 0; /* 🔹 less top space */
   }
 
-  .filter select {
-    font-size: 20px;
-    padding: 10px;
-    height: 40px;
-    width: 200px;
+  .search-filter input {
+    padding: 8px;
+    font-size: 16px;
+    width: 250px;
     border-radius: 5px;
+    border: 1px solid #ccc;
   }
 
-  .filter button {
-    font-size: 20px;
-    margin-left: 10px;
-    padding: 7px;
-    border-radius: 20px;
-    background-color: rgba(67, 39, 245, 1);
-    color: aliceblue;
+  .search-filter select {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
   }
 
   .grid {
@@ -129,33 +128,44 @@
 
   .grid-item {
     display: flex;
-    justify-content: flex-start; /* Align content to the left */
+    justify-content: flex-start;
     align-items: center;
-    gap: 10px;
-    height: 100%; /* Ensure grid items stretch vertically */
+    gap: 15px;
+    height: 100%;
   }
 
   .grid-item img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
   }
 
   .labels {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    justify-content: center; 
-    text-align: left; /* Align labels text to the left */
+    gap: 6px;
+    justify-content: center;
+    text-align: left;
   }
 
   .label {
     font-size: 14px;
+  }
+
+  .label.name {
+    font-weight: bold;
+  }
+
+  .label.grey {
+    color: grey; /* 🔹 cantidad de personas */
+  }
+
+  .label.estado {
     font-weight: bold;
   }
 
   .header {
-    margin-top: 120px;
+    margin-top: 80px; /* 🔹 less space above */
   }
 
   @media (max-width: 1024px) {
@@ -169,4 +179,4 @@
       grid-template-columns: 1fr;
     }
   }
-</style> 
+</style>
