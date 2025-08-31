@@ -1,65 +1,65 @@
 <script>
+  import { onMount } from "svelte";
   import Navbar from "../../../components/navbar.svelte";
   import Albacinema from "../../../assets/Albacinema_Logo.png";
   import Max from "../../../assets/NeIpPcwC_400x400.jpg";
   import Burger from "../../../assets/Burger_King_2020.svg.png";
 
-  let selected = $state();
-  let answer = $state("");
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    alert(
-      `answered question ${selected.id} (${selected.text}) with "${answer}"`
-    );
-  }
-
-  const items = [
-    {
-      image: Albacinema,
-      name: "Albacinema",
-      cantidad: 0,
-      estado: "Vacío",
-    },
-    {
-      image: Max,
-      name: "Max",
-      cantidad: 0,
-      estado: "Moderado",
-    },
-    {
-      image: Burger,
-      name: "Burger King",
-      cantidad: 0,
-      estado: "Saturado",
-    },
+  // 🔹 Items array
+  let items = [
+    { image: Albacinema, name: "Albacinema", cantidad: 0, estado: "Vacío" },
+    { image: Max, name: "Max", cantidad: 0, estado: "Moderado" },
+    { image: Burger, name: "Burger King", cantidad: 0, estado: "Saturado" },
   ];
 
-  let search = $state("");
-  let estadoFilter = $state("Todos");
+  // 🔹 Filters
+  let search = "";
+  let estadoFilter = "Todos";
 
-  // 🔹 Derived filtered items
-  const filteredItems = $derived(
-    items.filter((item) => {
-      const name = item.name.toLowerCase();
-      const estado = item.estado.toLowerCase();
+  // 🔹 Reactive filtered items
+  $: filteredItems = items.filter((item) => {
+    const matchesName = item.name.toLowerCase().includes(search.toLowerCase());
+    const matchesEstado =
+      estadoFilter === "Todos" ||
+      item.estado.toLowerCase().includes(estadoFilter.toLowerCase());
+    return matchesName && matchesEstado;
+  });
 
-      const matchesName = name.includes(search.toLowerCase());
-      const matchesEstado =
-        estadoFilter === "Todos" ||
-        estado.includes(estadoFilter.toLowerCase());
-
-      return matchesName && matchesEstado;
-    })
-  );
-
-  // 🔹 Helper: return estado color
+  // 🔹 Estado color helper
   function estadoColor(estado) {
-    if (estado.toLowerCase().includes("vacío")) return "green";
-    if (estado.toLowerCase().includes("moderado")) return "orange";
-    if (estado.toLowerCase().includes("saturado")) return "red";
+    if (estado.toLowerCase() === "vacío") return "green";
+    if (estado.toLowerCase() === "moderado") return "orange";
+    if (estado.toLowerCase() === "saturado") return "red";
     return "black";
   }
+
+  // 🔹 Fetch Albacinema person count from backend
+  async function fetchAlbacinemaCantidad() {
+    try {
+      const res = await fetch("http://localhost:5000/detect");
+      const data = await res.json();
+      const cantidad = data.people_detected || 0;
+
+      const albacinema = items.find((i) => i.name === "Albacinema");
+      if (albacinema) {
+        albacinema.cantidad = cantidad;
+
+        if (cantidad <= 15) albacinema.estado = "Vacío";
+        else if (cantidad <= 30) albacinema.estado = "Moderado";
+        else albacinema.estado = "Saturado";
+
+        // 🔹 Trigger reactivity
+        items = [...items];
+      }
+    } catch (err) {
+      console.error("Error fetching Albacinema data:", err);
+    }
+  }
+
+  // 🔹 Call fetch on page load / refresh
+  onMount(() => {
+    fetchAlbacinemaCantidad();
+  });
 </script>
 
 <div class="header">
@@ -68,7 +68,7 @@
   </a>
 </div>
 
-<!-- 🔹 Search and Estado filter UI -->
+<!-- Search and Estado filter -->
 <div class="search-filter">
   <input type="text" placeholder="Buscar local..." bind:value={search} />
   <select bind:value={estadoFilter}>
@@ -85,9 +85,7 @@
       <img src={item.image} alt={item.name} />
       <div class="labels">
         <div class="label name">{item.name}</div>
-        <div class="label grey">
-          Cantidad de personas: {item.cantidad}
-        </div>
+        <div class="label grey">Cantidad de personas: {item.cantidad}</div>
         <div class="label estado" style="color: {estadoColor(item.estado)}">
           Estado: {item.estado}
         </div>
@@ -101,7 +99,7 @@
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin: 20px 0; /* 🔹 less top space */
+    margin: 20px 0;
   }
 
   .search-filter input {
@@ -157,7 +155,7 @@
   }
 
   .label.grey {
-    color: grey; /* 🔹 cantidad de personas */
+    color: grey;
   }
 
   .label.estado {
@@ -165,7 +163,7 @@
   }
 
   .header {
-    margin-top: 80px; /* 🔹 less space above */
+    margin-top: 80px;
   }
 
   @media (max-width: 1024px) {
