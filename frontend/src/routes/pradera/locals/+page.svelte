@@ -5,14 +5,22 @@
   import Max from "../../../assets/NeIpPcwC_400x400.jpg";
   import Burger from "../../../assets/Burger_King_2020.svg.png";
 
-  // 🔹 Items array
+  // 🔹 Helper que asigna estado según cantidad
+  function getEstado(cantidad) {
+    if (cantidad >= 1 && cantidad <= 15) return "Vacío";
+    if (cantidad >= 16 && cantidad <= 30) return "Moderado";
+    if (cantidad >= 31) return "Saturado";
+    return "Vacío"; // fallback cuando es 0
+  }
+
+  // 🔹 Items iniciales
   let items = [
     { image: Albacinema, name: "Albacinema", cantidad: 0, estado: "Vacío" },
-    { image: Max, name: "Max", cantidad: 0, estado: "Moderado" },
-    { image: Burger, name: "Burger King", cantidad: 0, estado: "Saturado" },
+    { image: Max, name: "Max", cantidad: 20, estado: getEstado(20) },
+    { image: Burger, name: "Burger King", cantidad: 42, estado: getEstado(42) },
   ];
 
-  // 🔹 Filters
+  // 🔹 Filtros
   let search = "";
   let estadoFilter = "Todos";
 
@@ -33,7 +41,7 @@
     return "black";
   }
 
-  // 🔹 Fetch Albacinema person count from backend
+  // 🔹 Fetch Albacinema person count
   async function fetchAlbacinemaCantidad() {
     try {
       const res = await fetch("http://localhost:5000/detect");
@@ -43,12 +51,9 @@
       const albacinema = items.find((i) => i.name === "Albacinema");
       if (albacinema) {
         albacinema.cantidad = cantidad;
+        albacinema.estado = getEstado(cantidad);
 
-        if (cantidad <= 15) albacinema.estado = "Vacío";
-        else if (cantidad <= 30) albacinema.estado = "Moderado";
-        else albacinema.estado = "Saturado";
-
-        // 🔹 Trigger reactivity
+        // 🔹 Reasignamos para disparar reactividad
         items = [...items];
       }
     } catch (err) {
@@ -56,7 +61,7 @@
     }
   }
 
-  // 🔹 Call fetch on page load / refresh
+  // 🔹 Call fetch on page load
   onMount(() => {
     fetchAlbacinemaCantidad();
   });
